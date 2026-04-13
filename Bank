@@ -1,0 +1,80 @@
+//Bank Account Management
+def create_account(accounts, account_number, name, balance=0):
+   if account_number in accounts:
+      print("Account number already exists.")
+   else:
+      accounts[account_number] = {"name": name, "balance": balance}
+      print("Account created successfully.")
+
+def get_account(accounts, account_number):
+   if account_number not in accounts:
+      print("Account number not found.")
+      return None
+   else:
+      return accounts[account_number]
+
+def deposit(account, amount):
+   if amount <= 0:
+      print("Invalid amount.")
+   else:
+      account["balance"] += amount
+      print("Deposit successful.")
+
+def withdraw(account, amount):
+   if amount <= 0:
+      print("Invalid amount.")
+   elif account["balance"] < amount:
+      print("Insufficient balance.")
+   else:
+      account["balance"] -= amount
+      print("Withdrawal successful.")
+
+def check_balance(account):
+   print(f"Account balance: {account['balance']}")
+
+def main():
+   accounts = {}
+   while True:
+      print("\nBank Management System")
+      print("1. Create Account")
+      print("2. Deposit")
+      print("3. Withdraw")
+      print("4. Check Balance")
+      print("5. Exit")
+
+      choice = input("Enter your choice: ")
+
+      if choice == "1":
+       account_number = input("Enter account number: ")
+       name = input("Enter name: ")
+       create_account(accounts, account_number, name)
+
+      elif choice == "2":
+       account_number = input("Enter account number: ")
+       account = get_account(accounts, account_number)
+       if account:
+        amount = float(input("Enter deposit amount: "))
+        deposit(account, amount)
+
+      elif choice == "3":
+       account_number = input("Enter account number: ")
+       account = get_account(accounts, account_number)
+       if account:
+        amount = float(input("Enter withdrawal amount: "))
+        withdraw(account, amount)
+
+      elif choice == "4":
+       account_number = input("Enter account number: ")
+       account = get_account(accounts, account_number)
+       if account:
+        check_balance(account)
+
+      elif choice == "5":
+       print("Exiting...")
+       break
+
+      else:
+       print("Invalid choice.")
+
+if __name__ == "__main__":
+   main()
