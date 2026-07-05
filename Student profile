@@ -1,0 +1,27 @@
+// C program to display student profile
+#include<stdio.h>
+int main(){
+    char name[50],college[70],dept[50];
+    int n,age,sem;
+    float CGPA;
+    printf("Enter the name:");
+    scanf("%s",&name);
+    printf("Enter the age:");
+    scanf("%d",&age);
+    printf("Enter the college name:");
+    scanf("%s",&college);
+    printf("Enter the department name:");
+    scanf("%s",&dept);
+    printf("Enter the semester:");
+    scanf("%d",&sem);
+    printf("Enter the CGPA:");
+    scanf("%f\n",&CGPA);
+    printf("----Students profile-----\n");
+    printf("Name       :%s\n",name);
+    printf("Age        :%d\n",age);
+    printf("College    :%s\n",college);
+    printf("Department :%s\n",dept);
+    printf("Semester   :%d\n",sem);
+    printf("CGPA       :%.2f\n",CGPA);
+    return 0;
+}
