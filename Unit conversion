@@ -1,0 +1,26 @@
+// C program for unit conversion celsius to fahrenheit,fahrenheit to celsius,km to m, hr to min,days to hrs
+#include<stdio.h>
+int main(){
+    float cel,fah,km,m,hr,min,days,hrs,c,f;
+    printf("Enter the degree in celsius:");
+    scanf("%f",&c);
+    f=(c*9/5)+32;
+    printf("The degree in fahrenheit is %.1f\n",f);
+    printf("Enter the degree in fahrenheit:");
+    scanf("%f",&fah);
+    cel=(fah-32)*5/9;
+    printf("The degree in celsius is %.1f\n",cel);
+    printf("Enter the distance in km:");
+    scanf("%f",&km);
+    m=km*1000;
+    printf("The distance in meters is %.1f\n",m);
+    printf("Enter the time in hr:");
+    scanf("%f",&hr);
+    min=hr*60;
+    printf("The time in min is %.1f\n",min);
+    printf("Enter the days:");
+    scanf("%f",&days);
+    hrs=days*24;
+    printf("The days in hrs is %.1f\n",hrs);
+    return 0;
+}
