@@ -1,0 +1,21 @@
+// C program to calculate employee salary
+#include<stdio.h>
+int main(){
+    int n,id;
+    float bs,hra,da,gs;
+    char name[50];
+    printf("Enter the number of employee:");
+    scanf("%d",&n);
+    for(int i=0;i<n;i++){
+        printf("Enter the name:");
+        scanf("%s",name);
+        printf("Enter the id:");
+        scanf("%d",&id);
+        printf("Enter the basic salary:");
+        scanf("%f",&bs);
+        hra=bs*0.2;
+        da=bs*0.5;
+        gs=bs+da+hra;
+        printf("The employee's salary is %.2f \n",gs);
+        }
+}
