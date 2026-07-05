@@ -1,0 +1,20 @@
+// C program that accepts students basic details and marks then calculate the total and average
+#include<stdio.h>
+#include<string.h>
+int main(){
+    char name[50];
+    float mark1,mark2,mark3,mark4,mark5,tot,avg;
+    int n;
+    printf("Enter the number of students:");
+    scanf("%d",&n);
+    for(int i=0;i<n;i++){
+        printf("Enter the name:");
+        scanf("%s",name);
+        printf("Enter the subject marks:");
+        scanf("%f %f %f %f %f",&mark1,&mark2,&mark3,&mark4,&mark5);
+        tot=mark1+mark2+mark3+mark4+mark5;
+        avg=tot/5;
+        printf("the total and average mark is %f ,%f \n",tot,avg);
+    }
+    return 0;
+}
