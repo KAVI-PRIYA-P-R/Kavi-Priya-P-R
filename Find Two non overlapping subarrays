@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+#define INF 1e9
+int minSumOfLengths(int* arr, int arrSize, int target) {
+    int* min_len = (int*)malloc(sizeof(int) * arrSize);
+    for (int i = 0; i < arrSize; i++) {
+        min_len[i] = INF;
+    }
+
+    int left = 0;
+    int current_sum = 0;
+    int min_total_sum = INF;
+
+    for (int right = 0; right < arrSize; right++) {
+        current_sum += arr[right];
+
+        while (current_sum > target && left <= right) {
+            current_sum -= arr[left];
+            left++;
+        }
+
+        if (current_sum == target) {
+            int current_len = right - left + 1;
+            if (left > 0 && min_len[left - 1] != INF) {
+                min_total_sum = MIN(min_total_sum, current_len + min_len[left - 1]);
+            }
+
+            if (right == 0) {
+                min_len[right] = current_len;
+            } else {
+                min_len[right] = MIN(min_len[right - 1], current_len);
+            }
+        } else {
+            if (right > 0) {
+                min_len[right] = min_len[right - 1];
+            }
+        }
+    }
+
+    free(min_len);
+    return min_total_sum >= INF ? -1 : min_total_sum;
+}
