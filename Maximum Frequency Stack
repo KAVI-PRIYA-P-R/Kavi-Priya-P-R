@@ -1,0 +1,169 @@
+#include <stdlib.h>
+#include <string.h>
+#define HASH_SIZE 2048
+
+typedef struct FreqNode {
+    int key;
+    int count;
+    struct FreqNode* next;
+} FreqNode;
+
+typedef struct StackNode {
+    int val;
+    struct StackNode* next;
+} StackNode;
+
+typedef struct GroupNode {
+    int freq;
+    StackNode* stackTop;
+    struct GroupNode* next;
+} GroupNode;
+
+typedef struct {
+    FreqNode* freqMap[HASH_SIZE];   
+    GroupNode* groupMap[HASH_SIZE]; 
+    int maxFreq;                    
+} FreqStack;
+
+int getHash(int key) {
+    int hash = key % HASH_SIZE;
+    return hash < 0 ? hash + HASH_SIZE : hash;
+}
+
+int incrementFreq(FreqStack* obj, int val) {
+    int index = getHash(val);
+    FreqNode* curr = obj->freqMap[index];
+    while (curr) {
+        if (curr->key == val) {
+            curr->count++;
+            return curr->count;
+        }
+        curr = curr->next;
+    }
+    FreqNode* newNode = (FreqNode*)malloc(sizeof(FreqNode));
+    newNode->key = val;
+    newNode->count = 1;
+    newNode->next = obj->freqMap[index];
+    obj->freqMap[index] = newNode;
+    return 1;
+}
+
+void decrementFreq(FreqStack* obj, int val) {
+    int index = getHash(val);
+    FreqNode* curr = obj->freqMap[index];
+    while (curr) {
+        if (curr->key == val) {
+            curr->count--;
+            return;
+        }
+        curr = curr->next;
+    }
+}
+
+void pushToGroup(FreqStack* obj, int freq, int val) {
+    int index = getHash(freq);
+    GroupNode* curr = obj->groupMap[index];
+    while (curr) {
+        if (curr->freq == freq) {
+            break;
+        }
+        curr = curr->next;
+    }
+    
+    if (!curr) {
+        curr = (GroupNode*)malloc(sizeof(GroupNode));
+        curr->freq = freq;
+        curr->stackTop = NULL;
+        curr->next = obj->groupMap[index];
+        obj->groupMap[index] = curr;
+    }
+    
+    StackNode* newStackNode = (StackNode*)malloc(sizeof(StackNode));
+    newStackNode->val = val;
+    newStackNode->next = curr->stackTop;
+    curr->stackTop = newStackNode;
+}
+
+int popFromGroup(FreqStack* obj, int freq) {
+    int index = getHash(freq);
+    GroupNode* curr = obj->groupMap[index];
+    
+    while (curr) {
+        if (curr->freq == freq) {
+            StackNode* temp = curr->stackTop;
+            int poppedVal = temp->val;
+            curr->stackTop = temp->next;
+            free(temp);
+            return poppedVal;
+        }
+        curr = curr->next;
+    }
+    return -1; 
+}
+
+int isGroupEmpty(FreqStack* obj, int freq) {
+    int index = getHash(freq);
+    GroupNode* curr = obj->groupMap[index];
+    while (curr) {
+        if (curr->freq == freq) {
+            return curr->stackTop == NULL;
+        }
+        curr = curr->next;
+    }
+    return 1;
+}
+
+FreqStack* freqStackCreate() {
+    FreqStack* obj = (FreqStack*)malloc(sizeof(FreqStack));
+    memset(obj->freqMap, 0, sizeof(obj->freqMap));
+    memset(obj->groupMap, 0, sizeof(obj->groupMap));
+    obj->maxFreq = 0;
+    return obj;
+}
+
+void freqStackPush(FreqStack* obj, int val) {
+    int currentFreq = incrementFreq(obj, val);
+    
+    if (currentFreq > obj->maxFreq) {
+        obj->maxFreq = currentFreq;
+    }
+    
+    pushToGroup(obj, currentFreq, val);
+}
+
+int freqStackPop(FreqStack* obj) {
+    int val = popFromGroup(obj, obj->maxFreq);
+    decrementFreq(obj, val);
+    if (isGroupEmpty(obj, obj->maxFreq)) {
+        obj->maxFreq--;
+    }
+    return val;
+}
+
+void freqStackFree(FreqStack* obj) {
+    for (int i = 0; i < HASH_SIZE; i++) {
+        FreqNode* currFreq = obj->freqMap[i];
+        while (currFreq) {
+            FreqNode* temp = currFreq;
+            currFreq = currFreq->next;
+            free(temp);
+        }
+    }
+    
+    for (int i = 0; i < HASH_SIZE; i++) {
+        GroupNode* currGroup = obj->groupMap[i];
+        while (currGroup) {
+            StackNode* currStack = currGroup->stackTop;
+            while (currStack) {
+                StackNode* tempStack = currStack;
+                currStack = currStack->next;
+                free(tempStack);
+            }
+            GroupNode* tempGroup = currGroup;
+            currGroup = currGroup->next;
+            free(tempGroup);
+        }
+    }
+    
+    free(obj);
+}
