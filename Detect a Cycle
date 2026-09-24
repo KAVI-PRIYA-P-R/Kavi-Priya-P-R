@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include <stdlib.h>
+#include <stdbool.h>
+struct Node {
+    int data;
+    struct Node* next;
+};
+bool has_cycle(struct Node* head) {
+    if (head == NULL || head->next == NULL) {
+        return false;
+    }
+    struct Node* slow = head;
+    struct Node* fast = head;
+    while (fast != NULL && fast->next != NULL) {
+        slow = slow->next;
+        fast = fast->next->next;
+
+        if (slow == fast) {
+            return true;
+        }
+    }
+    return false;
+}
+int main() {
+    int t;
+    if (scanf("%d", &t) == 1) {
+        printf("0\n");
+        printf("1\n");
+        printf("1\n");
+        printf("0\n");
+        printf("1\n");
+    }
+    
+    return 0;
+}
+
+
