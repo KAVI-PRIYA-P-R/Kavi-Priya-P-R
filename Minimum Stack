@@ -1,0 +1,46 @@
+#include <stdlib.h>
+typedef struct {
+    int *data;
+    int *minData;
+    int top;
+    int capacity;
+} MinStack;
+MinStack* minStackCreate() {
+    MinStack *obj = (MinStack*)malloc(sizeof(MinStack));
+    obj->capacity = 1000; 
+    obj->data = (int*)malloc(sizeof(int) * obj->capacity);
+    obj->minData = (int*)malloc(sizeof(int) * obj->capacity);
+    obj->top = -1;
+    return obj;
+}
+void minStackPush(MinStack* obj, int value) {
+    if (obj->top == obj->capacity - 1) {
+        obj->capacity *= 2;
+        obj->data = (int*)realloc(obj->data, sizeof(int) * obj->capacity);
+        obj->minData = (int*)realloc(obj->minData, sizeof(int) * obj->capacity);
+    }
+    obj->top++;
+    obj->data[obj->top] = value;
+    if (obj->top == 0) {
+        obj->minData[obj->top] = value;
+    } else {
+        int currentMin = obj->minData[obj->top - 1];
+        obj->minData[obj->top] = (value < currentMin) ? value : currentMin;
+    }
+}
+void minStackPop(MinStack* obj) {
+    if (obj->top >= 0) {
+        obj->top--;
+    }
+}
+int minStackTop(MinStack* obj) {
+    return obj->data[obj->top];
+}
+int minStackGetMin(MinStack* obj) {
+    return obj->minData[obj->top];
+}
+void minStackFree(MinStack* obj) {
+    free(obj->data);
+    free(obj->minData);
+    free(obj);
+}
